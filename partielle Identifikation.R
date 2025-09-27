@@ -10,12 +10,16 @@ N <- 50   # Größe der Stichproben
 beta_0 <- 2
 beta_1 <- 1
 
+# korrekter Wert der Missspezifikation
+Modellfehler <- 0.8
+
+
 #Funktion "data" erstellt alle Variablen für einen Simulationsdurchgang
 data <- function(){
   # cov_xz bezeichnet jeweilige Kovarianzen (hier von Regressor x und IV z), e ist ein Teil des Fehlerterms der Regression
-  cov_xz <- 0.5   
-  cov_xe <- 0     # Exogenitätsannahme wird aufgrund später hinzugefügten Messfehler zerstört
-  cov_ze <- 0.8   # falls Modell missspezifiziert sein soll, gilt Cov(Z_i, e_i) =/= 0
+  cov_xz <- 0.5           # Kovarianz beschreibt die Stärke des Instruments
+  cov_xe <- 0             # Exogenitätsannahme wird aufgrund des später hinzugefügten Messfehlers ungültig
+  cov_ze <- Modellfehler  # falls Modell missspezifiziert sein soll, gilt Cov(Z_i, e_i) =/= 0
   
   daten <- mvrnorm(N, c(1, 1, 0), matrix(c(1, cov_xz, cov_xe, # Regressor x, IV Z und Fehlerterm e wird erstellt
                                            cov_xz, 1, cov_ze,
@@ -130,7 +134,7 @@ partIdent <- function(x, y, IV){
   #M_min <- M_min(g_hat, W_hat, Sigma_hat, Gamma_hat, c) # wenn d_Z = d_b 
   # --> Berechnung von M_min im genau identifizierten Fall rechnerisch immer ca. 0, die J-Statistik ist hier leider nicht sinnvoll
   
-  M <- 0.8/sqrt(N)  # setze M = 0 im korrekten Fall, wähle M aus (0, unendlich) im missspezierten Fall
+  M <- Modellfehler/sqrt(N)  # setze M = 0 im korrekten Fall, wähle M aus (0, unendlich) im missspezierten Fall
   
   # worst case-bias:
   bias_hat <- M * k %*% c
