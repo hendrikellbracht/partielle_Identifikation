@@ -1,4 +1,4 @@
-library(MASS) #für Multinominalverteilung
+library(MASS) #für Multinomialverteilung
 library(ivreg) #eingebauter TSLS
 
 set.seed(123) # zur Replizierung der Ergebnisse
@@ -227,4 +227,5 @@ mean(CI_pI[,2]-CI_pI[,1]); median(CI_pI[,2]-CI_pI[,1])
 
 # Differenz der Schätzer
 mean(coeff_TSLS- coeff_pI)
+
 
